@@ -26,7 +26,7 @@ public class ChatController {
     public void createPost(@Headers Map<String, Object> headers,
                            @RequestBody @Valid ChatMessage chatMessage) {
 
-        template.convertAndSend("/topic/chat/" + chatMessage.getProjectId(), chatMessage);
+        template.convertAndSend("/topic/chat/" + chatMessage.getRoomId(), chatMessage);
         //chatService.createChat(chatMessage);
         log.info("chatMessage = {}", chatMessage);
     }

@@ -13,12 +13,9 @@ import lombok.ToString;
 @ToString
 public class ChatMessage {
 
-    private Long memberId;
+    private Long roomId;
     private String memberName;
     @NotEmpty
     @Size(min = 1, max = 300)
     private String content;
-    private Long projectId;
-
-
 }
