@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+<script>
+    
+function sendMessage() {
+
+    const content = document.getElementById('messageContent');
+    const writer = document.getElementById('messageWriter');
+
+    const ChatRequest = {
+    roomId: 1,
+    memberName: writer.value,
+    content: content.value,
+    };
+
+    /*var headers = {
+    'header1': 'value1',
+    'header2': 'value2',
+    };*/
+
+    stompClient.send('/app/chat', {}, JSON.stringify(ChatRequest));
+
+}
+
+</script>
+    <!-- websocket 연결 -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="stomp.js"></script>
+
+    <!-- chat css-->
+    <link rel="stylesheet" href="chat.css">
+</head>
+
+<body>
+
+    <div class="p-4" style="padding: 0rem!important;">
+        <h4 class="fst-italic">채팅방</h4>
+        <div class="chatbox" id="chatbox">
+
+        </div>
+        <div class="inputbox">
+          <form onsubmit="return false;">
+            <input type="text" id="messageContent" placeholder="메시지를 입력하세요...">
+            <input id="sendButton" type="submit" value="전송" onclick="sendMessage()">
+            <p></p>
+            <input type="text" id="messageWriter" placeholder="name">
+          </form>
+        </div>
+      </div>
+
+</body>
+</html>
