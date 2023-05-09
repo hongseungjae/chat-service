@@ -3,10 +3,13 @@ package com.hong.chatservice.participant.domain;
 import com.hong.chatservice.member.domain.Member;
 import com.hong.chatservice.room.domain.Room;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Participant {
 
     @Id
