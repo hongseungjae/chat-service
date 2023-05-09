@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -18,8 +21,25 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final MemberRepository memberRepository;
 
+
+    public RoomResponseDto retrieveRoom(Long roomId) {
+        Room finedRoom = findRoom(roomId);
+        RoomResponseDto roomResponseDto = RoomResponseDto.toDto(finedRoom);
+        return roomResponseDto;
+    }
+
+    public List<RoomResponseDto> retrieveAllRooms() {
+        List<Room> allRooms = roomRepository.findAll();
+
+        List<RoomResponseDto> roomResponseDtoList = allRooms.stream()
+                .map(room -> RoomResponseDto.toDto(room))
+                .collect(Collectors.toList());
+
+        return roomResponseDtoList;
+    }
+
     @Transactional
-    public void createRoom(CreateRoomRequest request){
+    public Long createRoom(CreateRoomRequest request){
 
         Member member = findMember(request.getMemberId());
         Room createRoom = Room.builder()
@@ -27,7 +47,7 @@ public class RoomService {
                 .maxHeadCount(request.getMaxHeadCount())
                 .admin(member).build();
 
-        roomRepository.save(createRoom);
+        return roomRepository.save(createRoom).getId();
 
     }
 
