@@ -29,3 +29,17 @@ https://unluckyjung.github.io/jpa/2022/01/17/JPA-Notnull-Column/
 방제를 바꾸는 권한이 어드민에게만 있는데, 이게 만약 유저에게도 권한을 주려면, 코드 수정을 해야되나?
 
 6. cascade = CascadeType.ALL, orphanRemoval = true
+
+5.09
+
+7. RoomService 테스트 코드 작성 시 스프링테스트 없이 만들어보기
+
+8. 
+컨트롤러에서 Room 전체 조회 시
+2023-05-09T22:54:29.230+09:00  WARN 22392 --- [nio-8080-exec-4] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotWritableException: Could not write JSON: No default constructor for entity:  : com.hong.chatservice.participant.domain.Participant]
+
+Participant 엔티티에
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+추가
+
+방만들고 -> 방목록 뿌려보기
