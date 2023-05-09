@@ -6,8 +6,9 @@ import com.hong.chatservice.participant.domain.Participant;
 import com.hong.chatservice.participant.domain.RoomRole;
 import com.hong.chatservice.setting.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class Room extends BaseEntity {
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Participant> participants = new ArrayList<>();
 
-    @Size(min = 2)
+    @Min(2) @Max(50)
     private int maxHeadCount;
 
     public void checkEnoughHeadCount() {
@@ -75,6 +76,6 @@ public class Room extends BaseEntity {
         this.roomName = roomName;
         this.maxHeadCount = maxHeadCount;
 
-        addParticipant(admin, RoomRole.room_admin);
+        this.participants.add(new Participant(admin, this, RoomRole.room_admin));
     }
 }
