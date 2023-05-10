@@ -23,13 +23,13 @@ public class RoomService {
 
 
     public RoomResponseDto retrieveRoom(Long roomId) {
-        Room finedRoom = findRoom(roomId);
+        Room finedRoom = findDetailRoom(roomId);
         RoomResponseDto roomResponseDto = RoomResponseDto.toDto(finedRoom);
         return roomResponseDto;
     }
 
     public List<RoomResponseDto> retrieveAllRooms() {
-        List<Room> allRooms = roomRepository.findAll();
+        List<Room> allRooms = roomRepository.findRooms();
 
         List<RoomResponseDto> roomResponseDtoList = allRooms.stream()
                 .map(room -> RoomResponseDto.toDto(room))
@@ -60,6 +60,11 @@ public class RoomService {
 
     private Room findRoom(Long roomId) {
         return roomRepository.findById(roomId)
+                .orElseThrow(RuntimeException::new);
+    }
+
+    private Room findDetailRoom(Long roomId) {
+        return roomRepository.findDetails(roomId)
                 .orElseThrow(RuntimeException::new);
     }
 
