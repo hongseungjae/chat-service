@@ -43,3 +43,37 @@ Participant 엔티티에
 추가
 
 방만들고 -> 방목록 뿌려보기
+
+5.10
+
+1. base entity에 Serializable 하는 이유
+
+2.No serializer found for class org.hibernate.proxy.pojo.bytebuddy.ByteBuddyInterceptor and no properties discovered to create BeanSerializer
+
+ class com.hong.chatservice.member.domain.Member$HibernateProxy$CIKOzJvT
+이걸 그대로 반환 시 에러
+
+LAZY로딩 발생하였는데 participant인줄 알았으나 participant안에 member였다
+
+3. java.lang.IllegalStateException: Cannot call sendError() after the response has been committed 에러
+
+Room들을 조회 중
+Room에서 List로 participants를 가지고 있음 -> 그 안의 participant는 Room을 가지고 있음
+
+그러면 Room -> participant -> Room -> participant로 무한참조 -> 클라이언트에서 호출할때만 발생
+
+양방향관계이므로
+
+1. dto 변환시 그대로 participants로 반환이 아닌 그 안에 member 이름만 출력하게
+2. json ignore
+
+
+
+3. No serializer found for class com.hong.chatservice.room.application.ParticipantInfo and no properties discovered to create BeanSerializer (to avoid exception, disable SerializationFeature.FAIL_ON_EMPTY_BEANS)  에러
+
+dto로 나가는 것중에 getter가 열려있지 않아서
+
+
+=======
+방제목 이름 중복 확인하기,
+
