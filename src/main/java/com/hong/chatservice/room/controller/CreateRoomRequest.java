@@ -1,9 +1,11 @@
 package com.hong.chatservice.room.controller;
 
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class CreateRoomRequest {
 
     @NotBlank
