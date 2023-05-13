@@ -34,14 +34,20 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers("/**")
-                                .authenticated());
+                                .requestMatchers("/", "/login/**", "/users").permitAll()
+                                .anyRequest().authenticated());
 
 
         //ajax 로그인
         http
                 .csrf().disable();
 
+        http
+                .formLogin()
+                .loginPage("/login")
+                .loginProcessingUrl("/login_proc")
+                .defaultSuccessUrl("/")
+                .permitAll();
 
         return http.build();
     }
