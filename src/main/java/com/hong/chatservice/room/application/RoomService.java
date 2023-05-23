@@ -6,6 +6,7 @@ import com.hong.chatservice.room.controller.CreateRoomRequest;
 import com.hong.chatservice.room.controller.JoinRoomRequest;
 import com.hong.chatservice.room.domain.Room;
 import com.hong.chatservice.room.infrastructure.RoomRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,24 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final MemberRepository memberRepository;
 
+
+    @PostConstruct
+    public void initCreateRooms(){
+        Member admin = new Member("HongSeungJae");
+
+        memberRepository.save(admin);
+
+        String roomName = "첫번째 방!!";
+        int headCount = 5;
+
+        CreateRoomRequest createRoomFirstRequest = new CreateRoomRequest(roomName, headCount, admin.getId());
+        createRoom(createRoomFirstRequest);
+
+        roomName = "두번째 방~~";
+        headCount = 3;
+        CreateRoomRequest createRoomSecondRequest = new CreateRoomRequest(roomName, headCount, admin.getId());
+        createRoom(createRoomSecondRequest);
+    }
 
     public RoomResponseDto retrieveRoom(Long roomId) {
         Room finedRoom = findDetailRoom(roomId);
