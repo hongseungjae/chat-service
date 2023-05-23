@@ -34,7 +34,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers("/", "/login/**", "/users").permitAll()
+                                .requestMatchers("/**", "/login/**", "/users").permitAll()
                                 .anyRequest().authenticated());
 
 
@@ -44,8 +44,9 @@ public class SecurityConfig {
 
         http
                 .formLogin()
-                .loginPage("/login")
-                .loginProcessingUrl("/login_proc")
+                //.loginPage("/login")
+                //.usernameParameter("1")
+                //.passwordParameter("1")
                 .defaultSuccessUrl("/")
                 .permitAll();
 
