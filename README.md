@@ -77,3 +77,11 @@ dto로 나가는 것중에 getter가 열려있지 않아서
 =======
 방제목 이름 중복 확인하기,
 
+
+05-23
+동시성 이슈 확인해보기
+    public void checkEnoughHeadCount() {
+        if ((participants.size() + 1) >= maxHeadCount) {
+            throw new RuntimeException();
+        }
+    }
