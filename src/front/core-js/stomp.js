@@ -55,7 +55,7 @@ function sendMessage() {
   const content = document.getElementById('messageContent');
   const writer = document.getElementById('messageWriter');
   const ChatRequest = {
-  roomId: 1,
+  roomId: roomId,
   memberName: writer.value,
   content: content.value,
   };
