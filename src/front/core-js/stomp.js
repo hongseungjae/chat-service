@@ -1,3 +1,7 @@
+const urlParams = new URLSearchParams(window.location.search);
+const roomId = urlParams.get('roomId');
+console.log('roomId : '+ roomId);
+
 var stompClient = null;
 
 var socket = new SockJS(`http://localhost:8080/websocket`);
@@ -7,7 +11,7 @@ stompClient.connect({}, function (frame) {
 
     console.log('Connected: ' + frame);
     
-    stompClient.subscribe(`/topic/chat/1`, function (receivedMesssage) {
+    stompClient.subscribe(`/topic/chat/${roomId}`, function (receivedMesssage) {
         var message= JSON.parse(receivedMesssage.body);
         //console.log(receivedMesssage.body + "  서버에서 날아온 메시지 ");
 
@@ -46,3 +50,21 @@ stompClient.connect({}, function (frame) {
 
 
 });
+
+function sendMessage() {
+  const content = document.getElementById('messageContent');
+  const writer = document.getElementById('messageWriter');
+  const ChatRequest = {
+  roomId: 1,
+  memberName: writer.value,
+  content: content.value,
+  };
+
+  /*var headers = {
+  'header1': 'value1',
+  'header2': 'value2',
+  };*/
+
+  stompClient.send('/app/chat', {}, JSON.stringify(ChatRequest));
+
+}

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>방 만들기</title>
+  <style>
+    /* 팝업 창 스타일 */
+    .popup-overlay {
+      /* CSS 스타일은 이전 답변에서 제공한 스타일과 동일하게 유지 */
+    }
+    
+    .popup-content {
+      /* CSS 스타일은 이전 답변에서 제공한 스타일과 동일하게 유지 */
+    }
+  </style>
+  <script>
+    // 팝업 창 열기
+    function openPopup() {
+      var popup = document.getElementById('popup');
+      popup.style.display = 'block';
+    }
+    
+    // 팝업 창 닫기
+    function closePopup() {
+      var popup = document.getElementById('popup');
+      popup.style.display = 'none';
+    }
+    
+    // 방 만들기 처리
+    function createRoom() {
+      var roomNameInput = document.getElementById('roomName');
+      var roomName = roomNameInput.value;
+      
+      // 방 만들기 로직 수행
+      console.log('방 이름: ' + roomName);
+      
+      // 팝업 창 닫기
+      closePopup();
+    }
+    
+    // 문서 로드 시 초기화 함수 호출
+    window.addEventListener('DOMContentLoaded', function() {
+      var popup = document.getElementById('popup');
+      var roomNameInput = document.getElementById('roomName');
+      var createButton = document.getElementById('createButton');
+      
+      // 팝업 창 외부를 클릭하면 팝업 창 닫기
+      window.addEventListener('click', function(event) {
+        if (event.target === popup) {
+          closePopup();
+        }
+      });
+      
+      // 방 이름 입력란과 버튼 클릭 이벤트의 전파를 방지
+      roomNameInput.addEventListener('click', function(event) {
+        event.stopPropagation();
+      });
+      
+      createButton.addEventListener('click', function(event) {
+        event.stopPropagation();
+        createRoom();
+      });
+    });
+  </script>
+</head>
+<body>
+  <button onclick="openPopup()">방 만들기</button>
+  
+  <div id="popup" class="popup-overlay" style="display: none;">
+    <div class="popup-content">
+      <h1>방 만들기</h1>
+      <input type="text" id="roomName" placeholder="방 이름">
+      <button id="createButton">방 만들기</button>
+    </div>
+  </div>
+</body>
+</html>

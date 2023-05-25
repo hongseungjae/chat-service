@@ -5,34 +5,20 @@
     <title>Title</title>
 <script>
     
-function sendMessage() {
-
-    const content = document.getElementById('messageContent');
-    const writer = document.getElementById('messageWriter');
-
-    const ChatRequest = {
-    roomId: 1,
-    memberName: writer.value,
-    content: content.value,
-    };
-
-    /*var headers = {
-    'header1': 'value1',
-    'header2': 'value2',
-    };*/
-
-    stompClient.send('/app/chat', {}, JSON.stringify(ChatRequest));
-
-}
 
 </script>
+  	<!-- env 설정 파일 적용 -->
+	  <script src="env.js"></script>
+
     <!-- websocket 연결 -->
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-    <script src="stomp.js"></script>
+
+    <script src="core-js/stomp.js"></script>
+
 
     <!-- chat css-->
-    <link rel="stylesheet" href="chat.css">
+    <link rel="stylesheet" href="core-css/chat.css">
 </head>
 
 <body>

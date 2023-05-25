@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- env 설정 파일 적용 -->
+    <script src="env.js"></script>
+    <title>방 만들기</title>
+
+    <script src="core-js/room-create.js"></script>
+    <style>
+        /* 전체 페이지를 가운데 정렬하기 위한 스타일 */
+        html,
+        body {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="popup" class="popup-overlay">
+        <div class="popup-content">
+            <h1>방 만들기</h1>
+            <p><input type='text' id='roomName' placeholder='방 이름'></p>
+            <p><input type='text' id='roomHeadCount' placeholder='방 인원수'></p>
+            <button onclick='createRoom()'>방 만들기</button>
+        </div>
+    </div>
+</body>
+
+</html>

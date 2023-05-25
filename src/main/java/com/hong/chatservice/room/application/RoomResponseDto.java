@@ -25,7 +25,8 @@ public class RoomResponseDto {
 
     private List<ParticipantResponseDto> participantsInfo = new ArrayList<>();
 
-    @Size(min = 2)
+    private int currentHeadCount;
+
     private int maxHeadCount;
 
     @NotNull
@@ -35,10 +36,11 @@ public class RoomResponseDto {
     private LocalDateTime updatedAt;
 
     @Builder
-    private RoomResponseDto(Long id, String roomName, List<ParticipantResponseDto> participantsInfo, int maxHeadCount, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    private RoomResponseDto(Long id, String roomName, List<ParticipantResponseDto> participantsInfo, int currentHeadCount, int maxHeadCount, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.roomName = roomName;
         this.participantsInfo = participantsInfo;
+        this.currentHeadCount = currentHeadCount;
         this.maxHeadCount = maxHeadCount;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -57,6 +59,7 @@ public class RoomResponseDto {
                 id(room.getId()).
                 roomName(room.getRoomName()).
                 participantsInfo(participantResponseDto).
+                currentHeadCount(participantResponseDto.size()).
                 maxHeadCount(room.getMaxHeadCount()).
                 createdAt(room.getCreatedAt()).
                 updatedAt(room.getUpdatedAt()).build();

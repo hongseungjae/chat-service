@@ -15,9 +15,16 @@
 	<!-- env 설정 파일 적용 -->
 	<script src="env.js"></script>
 
-	<!-- 방 리스트 api-->
-	<script src="room-list.js"></script>
+	<!-- 방 api-->
+	<script src="core-js/room-list.js"></script>
 
+	<script>
+
+		function showPopup() { 
+			window.open("room-create.html", "a", "width=500, height=300, left=100, top=50");
+		 }
+
+	</script>
 </head>
 
 
@@ -30,13 +37,16 @@
 					<h2 class="heading-section">채팅방</h2>
 				</div>
 			</div>
+
+			<button onclick="showPopup()">방 만들기</button>
+
 			<div class="row">
 				<div class="col-md-12">
 					<div class="table-wrap">
 						<table class="table">
 							<thead class="thead-dark">
 								<tr>
-									<th>ID no.</th>
+									<th>no.</th>
 									<th>방장</th>
 									<th>인원 수</th>
 									<th>방 제목</th>
