@@ -1,30 +1,37 @@
 package com.hong.chatservice.setting;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hong.chatservice.member.application.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Autowired
-    private UserDetailsService userDetailsService;
 
-    @Autowired
-    private JwtProvider jwtProvider;
+    private final MemberDetailsService memberDetailsService;
+
+    private final JwtProvider jwtProvider;
+    private final JsonAuthenticationSuccessHandler jsonAuthenticationSuccessHandler;
+    private final JsonAuthenticationFailureHandler jsonAuthenticationFailureHandler;
+    private final ObjectMapper objectMapper;
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -33,29 +40,53 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+
         http
-                .authorizeHttpRequests(
-                        auth -> auth
-                                .requestMatchers("/", "/login/**", "/users").permitAll()
-                                .anyRequest().authenticated());
+                .httpBasic().disable()
+                .csrf().disable()
+                .formLogin().disable();
+
+        http.authorizeHttpRequests()
+                .requestMatchers("/login").permitAll()
+                .anyRequest().authenticated();
+
         http
                 .cors();
 
-        //ajax 로그인
-        /*http
-                .csrf().disable()
-                .cors().configurationSource(corsConfigurationSource());*/
+        http
+                .addFilterBefore(jsonLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
 
         http
-                .formLogin()
-                .loginProcessingUrl("/login_proc")
-                //.loginPage("/login")
-                //.usernameParameter("1")
-                //.passwordParameter("1")
-                .defaultSuccessUrl("/")
-                .permitAll();
+                .exceptionHandling()
+                .authenticationEntryPoint(new JsonLoginAuthenticationEntryPoint())
+                .accessDeniedHandler(ajaxAccessDeniedHandler());
 
         return http.build();
+    }
+
+    @Bean
+    public AccessDeniedHandler ajaxAccessDeniedHandler() {
+        return new JsonAccessDeniedHandler();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+
+        provider.setPasswordEncoder(passwordEncoder());
+        provider.setUserDetailsService(memberDetailsService);
+
+        return new ProviderManager(provider);
+    }
+
+    @Bean
+    public JsonLoginProcessingFilter jsonLoginProcessingFilter() {
+        JsonLoginProcessingFilter jsonLoginProcessingFilter = new JsonLoginProcessingFilter(objectMapper);
+        jsonLoginProcessingFilter.setAuthenticationManager(authenticationManager());
+        jsonLoginProcessingFilter.setAuthenticationSuccessHandler(jsonAuthenticationSuccessHandler);
+        jsonLoginProcessingFilter.setAuthenticationFailureHandler(jsonAuthenticationFailureHandler);
+        return jsonLoginProcessingFilter;
     }
 
     @Bean
@@ -66,7 +97,6 @@ public class SecurityConfig {
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.addAllowedOriginPattern("*");
-        //configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
