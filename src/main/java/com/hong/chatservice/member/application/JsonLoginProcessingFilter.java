@@ -2,6 +2,8 @@ package com.hong.chatservice.member.application;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hong.chatservice.setting.exception.BusinessException;
+import com.hong.chatservice.setting.exception.ErrorCode;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,7 +36,7 @@ public class JsonLoginProcessingFilter extends AbstractAuthenticationProcessingF
 
         UserDto userDto = objectMapper.readValue(request.getReader(), UserDto.class);
         if (StringUtils.isEmpty(userDto.getUsername()) || StringUtils.isEmpty(userDto.getPassword())) {
-            throw new IllegalArgumentException("Username or Password is empty");
+            throw new BusinessException(ErrorCode.INVALID_USER);
         }
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword());

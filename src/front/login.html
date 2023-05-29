@@ -1,0 +1,99 @@
+<head>
+    <style>
+        form {
+            width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        button[type="submit"] {
+            background-color: #008CBA;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #005f77;
+        }
+    </style>
+    <!-- env 설정 파일 적용 -->
+    <script type="text/javascript" src="env.js"></script>
+</head>
+<form id="login-form">
+    <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username">
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password">
+    </div>
+    <button type="submit">Login</button>
+</form>
+
+<script>
+    const form = document.getElementById('login-form');
+
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const credentials = { username: username, password: password };
+
+        fetch(`http://${API_IP}:${API_PORT}/login`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                //'withCredentials': 'true'
+            },
+            body: JSON.stringify(credentials)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    response.json().then(error => {
+                        alert(error.message);
+                    });
+                } else {
+                    window.location.href = 'index.html';
+                    console.log(response);
+                    return response.json();
+                }
+                
+            })
+            .then(data => {
+                // Handle the response data here
+                //localStorage.setItem("test-token", data.token)
+
+                //window.location.href = 'index.html';
+            })
+            .catch(error => console.error(error));
+    });
+</script>

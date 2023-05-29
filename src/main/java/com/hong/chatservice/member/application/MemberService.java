@@ -24,10 +24,13 @@ public class MemberService {
         Member hong = new Member("hong",encodedPassword);
         Member jae = new Member("jae",encodedPassword);
         Member kai = new Member("kai",encodedPassword);
+        Member proto = new Member("proto",passwordEncoder.encode("1111"));
 
         memberRepository.save(hong);
         memberRepository.save(jae);
         memberRepository.save(kai);
+        memberRepository.save(proto);
+
     }
 
 

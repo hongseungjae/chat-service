@@ -16,13 +16,15 @@ function createRoom() {
             method: 'POST',
             //credentials: 'include',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'withCredentials': 'true'
             },
             body: JSON.stringify(room)
         })
             .then(response => {
-                if (response.status == 401) {
+                if (response.status == 401 || response.status == 403) {
                     alert('로그인을 해주세요.');
+                    console.log(response);
                 } else if (!response.ok) {
                     response.json().then(error => {
                         alert(error.message);

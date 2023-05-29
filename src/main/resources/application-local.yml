@@ -1,9 +1,11 @@
-spring:
+  spring:
   datasource:
     url: jdbc:h2:tcp://localhost/~/quick-together-test
     driver-class-name: org.h2.Driver
     username: sa
     password: 1
+
+
 
   jpa:
     hibernate:
@@ -12,3 +14,7 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+
+  logging:
+    level:
+      root: debug

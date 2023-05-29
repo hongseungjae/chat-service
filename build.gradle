@@ -28,6 +28,8 @@ dependencies {
 
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'

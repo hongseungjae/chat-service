@@ -34,7 +34,7 @@ public class Room extends BaseEntity {
     private int maxHeadCount;
 
     public void checkEnoughHeadCount() {
-        if ((participants.size() + 1) >= maxHeadCount) {
+        if (!(participants.size() < maxHeadCount)) {
             throw new RuntimeException();
         }
     }

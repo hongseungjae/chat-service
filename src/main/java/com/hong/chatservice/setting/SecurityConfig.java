@@ -5,6 +5,7 @@ import com.hong.chatservice.member.application.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -49,6 +50,8 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests()
                 .requestMatchers("/login").permitAll()
+                .requestMatchers(HttpMethod.OPTIONS,"/**/*").permitAll()
+                .requestMatchers(HttpMethod.GET,"/rooms").permitAll()
                 .anyRequest().authenticated();
 
         http
@@ -57,10 +60,9 @@ public class SecurityConfig {
         http
                 .addFilterBefore(jsonLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
 
-        http
+        /*http
                 .exceptionHandling()
-                .authenticationEntryPoint(new JsonLoginAuthenticationEntryPoint())
-                .accessDeniedHandler(ajaxAccessDeniedHandler());
+                .accessDeniedHandler(ajaxAccessDeniedHandler());*/
 
         return http.build();
     }
@@ -93,10 +95,12 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.addAllowedOrigin("*");
+        configuration.addAllowedOrigin("http://localhost:5500/");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.addAllowedOriginPattern("*");
+        configuration.setAllowCredentials(true);
+
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
