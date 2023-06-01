@@ -14,10 +14,10 @@ function createRoom() {
 
         fetch(`http://${API_IP}:${API_PORT}/rooms`, {
             method: 'POST',
-            //credentials: 'include',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
-                'withCredentials': 'true'
+                //'withCredentials': 'true'
             },
             body: JSON.stringify(room)
         })

@@ -99,6 +99,11 @@ public class SecurityConfig {
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.addAllowedOriginPattern("*");
+        configuration.addExposedHeader("X-AUTH-TOKEN");
+        configuration.addExposedHeader("Set-Cookie");
+        configuration.addExposedHeader("Cookie");
+
+
         configuration.setAllowCredentials(true);
 
 
