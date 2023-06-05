@@ -25,12 +25,12 @@ public class MemberAuthentication implements AuthenticationProvider {
 
         MemberContext memberContext = (MemberContext) userDetailsService.loadUserByUsername(memberName);
 
-        if (!passwordEncoder.matches(password, memberContext.getAccount().getPassword())) {
+        if (!passwordEncoder.matches(password, memberContext.getMember().getPassword())) {
             throw new BadCredentialsException("BadCredentialsException");
         }
 
 
-        return new UsernamePasswordAuthenticationToken(memberContext.getAccount(),null,memberContext.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(memberContext.getMember(),null,memberContext.getAuthorities());
     }
 
     @Override
