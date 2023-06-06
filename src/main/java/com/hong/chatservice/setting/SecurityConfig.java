@@ -1,7 +1,11 @@
 package com.hong.chatservice.setting;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hong.chatservice.member.application.*;
+import com.hong.chatservice.member.application.MemberDetailsService;
+import com.hong.chatservice.member.application.jwt.JwtAuthenticationFilter;
+import com.hong.chatservice.member.application.jwt.JwtAuthorizationFilter;
+import com.hong.chatservice.member.application.jwt.JwtUtil;
+import com.hong.chatservice.member.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,31 +13,27 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-
-    private final MemberDetailsService memberDetailsService;
-
-    private final JwtProvider jwtProvider;
-    private final JsonAuthenticationSuccessHandler jsonAuthenticationSuccessHandler;
-    private final JsonAuthenticationFailureHandler jsonAuthenticationFailureHandler;
+    private final MemberRepository memberRepository;
+    private final JwtUtil jwtUtil;
     private final ObjectMapper objectMapper;
-
+    //private final AuthenticationConfiguration authenticationManager;
+    private final MemberDetailsService memberDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -41,57 +41,33 @@ public class SecurityConfig {
     }
 
     @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(memberDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return new ProviderManager(authProvider);
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-
         http
-                .httpBasic().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .formLogin().disable();
+                .httpBasic().disable()
+                .formLogin().disable()
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)), objectMapper, jwtUtil))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)), memberRepository, jwtUtil));
 
         http.authorizeHttpRequests()
-                .requestMatchers("/login").permitAll()
-                .requestMatchers(HttpMethod.OPTIONS,"/**/*").permitAll()
-                .requestMatchers(HttpMethod.GET,"/rooms").permitAll()
-                .anyRequest().authenticated();
+                .requestMatchers("/rooms").authenticated()
+                .anyRequest().permitAll();
 
         http
                 .cors();
 
-        http
-                .addFilterBefore(jsonLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
-
-        /*http
-                .exceptionHandling()
-                .accessDeniedHandler(ajaxAccessDeniedHandler());*/
-
         return http.build();
-    }
-
-    @Bean
-    public AccessDeniedHandler ajaxAccessDeniedHandler() {
-        return new JsonAccessDeniedHandler();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-
-        provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(memberDetailsService);
-
-        return new ProviderManager(provider);
-    }
-
-    @Bean
-    public JsonLoginProcessingFilter jsonLoginProcessingFilter() {
-        JsonLoginProcessingFilter jsonLoginProcessingFilter = new JsonLoginProcessingFilter(objectMapper);
-        jsonLoginProcessingFilter.setAuthenticationManager(authenticationManager());
-        jsonLoginProcessingFilter.setAuthenticationSuccessHandler(jsonAuthenticationSuccessHandler);
-        jsonLoginProcessingFilter.setAuthenticationFailureHandler(jsonAuthenticationFailureHandler);
-        return jsonLoginProcessingFilter;
     }
 
     @Bean

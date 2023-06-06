@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
-public class MemberService {
+public class MemberInit {
     private final MemberRepository memberRepository;
 
     @Autowired
@@ -21,10 +21,10 @@ public class MemberService {
     @PostConstruct
     public void init() {
         String encodedPassword = passwordEncoder.encode("1");
-        Member hong = new Member("hong",encodedPassword);
-        Member jae = new Member("jae",encodedPassword);
-        Member kai = new Member("kai",encodedPassword);
-        Member proto = new Member("proto",passwordEncoder.encode("1111"));
+        Member hong = new Member("hong",encodedPassword,"ROLE_USER");
+        Member jae = new Member("jae",encodedPassword,"ROLE_USER");
+        Member kai = new Member("kai",encodedPassword,"ROLE_USER");
+        Member proto = new Member("proto",passwordEncoder.encode("1111"),"ROLE_USER");
 
         memberRepository.save(hong);
         memberRepository.save(jae);

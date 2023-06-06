@@ -8,6 +8,9 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Getter
 @Entity
@@ -24,11 +27,26 @@ public class Member {
     private String name; // 이름
     private String email;
 
+    private String roles;
+
+    public List<String> getRoleList(){
+        if(this.roles.length() > 0){
+            return Arrays.asList(this.roles.split(","));
+        }
+        return new ArrayList<>();
+    }
+
     @CreationTimestamp
     private LocalDateTime createDateTime;
 
     public Member(String memberName) {
         this.memberName = memberName;
+    }
+
+    public Member(String memberName, String password, String role) {
+        this.memberName = memberName;
+        this.password = password;
+        this.roles = "ROLE_USER";
     }
 
     public Member(String memberName, String password) {

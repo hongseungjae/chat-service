@@ -3,21 +3,22 @@ package com.hong.chatservice.member.application.jwt;
 import com.hong.chatservice.member.application.MemberContext;
 import com.hong.chatservice.member.domain.Member;
 import com.hong.chatservice.member.infrastructure.MemberRepository;
-import io.jsonwebtoken.Jwt;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import java.io.IOException;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
@@ -42,6 +43,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         try {
             username = jwtUtil.validateToken(header);
         } catch (IllegalAccessException e) {
+            e.printStackTrace();
             chain.doFilter(request, response);
             return;
         }
@@ -52,14 +54,17 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                         throw new RuntimeException();
                     });
 
-            MemberContext principalDetails = new MemberContext(member);
-            Authentication authentication = new UsernamePasswordAuthenticationToken(
-                    principalDetails, // 나중에 컨트롤러에서 DI해서 쓸 때 사용하기 편함.
-                    null, // 패스워드는 모르니까 null 처리, 어차피 지금 인증하는게 아니니까!!
-                    principalDetails.getAuthorities());
 
-            // 강제로 시큐리티의 세션에 접근하여 값 저장
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+                member.getRoleList().forEach(r -> {
+                    authorities.add(()->{ return r;});
+                });
+
+
+            MemberContext principalDetails = new MemberContext(member, authorities);
+
+            Authentication authenticate = new UsernamePasswordAuthenticationToken(principalDetails,principalDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authenticate);
         }
 
         chain.doFilter(request, response);

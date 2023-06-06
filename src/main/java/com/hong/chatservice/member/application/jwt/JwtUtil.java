@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Component
@@ -17,13 +18,13 @@ public class JwtUtil {
     static final String HEADER_STRING = "Authorization";
     
     public String createJwt(Long memberId, String memberName){
-
-        JwtBuilder jwtToken = Jwts.builder()
+        String jwtToken = Jwts.builder()
                 .setSubject(memberName)
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .claim("id", memberId)
                 .claim("username", memberName)
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY);
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .compact();
 
         return TOKEN_PREFIX+jwtToken;
     }
@@ -40,6 +41,7 @@ public class JwtUtil {
                     .getBody()
                     .get("username").toString();
         } catch (JwtException e) {
+            e.printStackTrace();
             throw new IllegalAccessException();
         }
 
