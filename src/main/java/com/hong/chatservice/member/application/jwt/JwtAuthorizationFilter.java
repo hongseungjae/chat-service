@@ -11,14 +11,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
@@ -51,19 +51,16 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         if (username != null) {
             Member member = memberRepository.findByMemberName(username)
                     .orElseThrow(() -> {
-                        throw new RuntimeException();
+                        throw new UsernameNotFoundException("UsernameNotFoundException");
                     });
 
-
-                Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-                member.getRoleList().forEach(r -> {
-                    authorities.add(()->{ return r;});
-                });
-
+            Collection<GrantedAuthority> authorities = new ArrayList<>();
+            member.getRoleList().forEach(role ->
+                    authorities.add(()-> role));
 
             MemberContext principalDetails = new MemberContext(member, authorities);
 
-            Authentication authenticate = new UsernamePasswordAuthenticationToken(principalDetails,principalDetails.getAuthorities());
+            Authentication authenticate = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authenticate);
         }
 
