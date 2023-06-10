@@ -3,12 +3,13 @@ const roomId = urlParams.get('roomId');
 console.log('roomId : '+ roomId);
 
 var stompClient = null;
+var headers = {Authorization: localStorage.getItem('access_token')};
 
 var socket = new SockJS(`http://localhost:8080/websocket`);
+
 stompClient = Stomp.over(socket);
 
-stompClient.connect({}, function (frame) {
-
+stompClient.connect(headers, (frame) => {
     console.log('Connected: ' + frame);
     
     stompClient.subscribe(`/topic/chat/${roomId}`, function (receivedMesssage) {
@@ -45,18 +46,19 @@ stompClient.connect({}, function (frame) {
         input.value = '';
         container.scrollTop = container.scrollHeight;
 
-
+    }, {Authorization: localStorage.getItem('access_token')})
+  }, (error) => {
+      console.log('연결실패');
+      console.log(error)
     });
 
-
-});
 
 function sendMessage() {
   const content = document.getElementById('messageContent');
   const writer = document.getElementById('messageWriter');
   const ChatRequest = {
   roomId: roomId,
-  memberName: writer.value,
+  memberName: '',
   content: content.value,
   };
 
@@ -65,6 +67,6 @@ function sendMessage() {
   'header2': 'value2',
   };*/
 
-  stompClient.send('/app/chat', {}, JSON.stringify(ChatRequest));
+  stompClient.send('/app/chat', {Authorization: localStorage.getItem('access_token')}, JSON.stringify(ChatRequest));
 
 }

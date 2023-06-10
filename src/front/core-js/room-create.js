@@ -14,10 +14,9 @@ function createRoom() {
 
         fetch(`http://${API_IP}:${API_PORT}/rooms`, {
             method: 'POST',
-            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
-                //'withCredentials': 'true'
+                'Authorization' : localStorage.getItem("access_token")
             },
             body: JSON.stringify(room)
         })

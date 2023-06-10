@@ -69,10 +69,8 @@
 
         fetch(`http://${API_IP}:${API_PORT}/login`, {
             method: 'POST',
-            credentials: 'include',
             headers: {
-                'Content-Type': 'application/json',
-                //'withCredentials': 'true'
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(credentials)
         })
@@ -82,18 +80,12 @@
                         alert(error.message);
                     });
                 } else {
+                    var token = response.headers.get('Authorization');
+                    localStorage.setItem('access_token', token);
                     window.location.href = 'index.html';
-                    console.log(response);
-                    return response.json();
+
                 }
                 
-            })
-            .then(data => {
-                // Handle the response data here
-                //localStorage.setItem("test-token", data.token)
-
-                //window.location.href = 'index.html';
-            })
-            .catch(error => console.error(error));
+            }).catch(error => console.error(error));
     });
 </script>

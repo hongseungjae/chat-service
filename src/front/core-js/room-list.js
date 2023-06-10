@@ -2,7 +2,8 @@ fetch(`http://${API_IP}:${API_PORT}/rooms`, {
     method: 'GET',
     //credentials: 'include',
     headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+         'Authorization' : localStorage.getItem("access_token")
     },
 })
     .then(response => {
@@ -36,9 +37,9 @@ fetch(`http://${API_IP}:${API_PORT}/rooms`, {
             roomsHtml += `
             <tr id="room-${room.id}" onclick="roomJoin(${room.id})" class="alert" role="alert">
             <th scope="row">${room.id}</th>
-            <td>${roomAdmin}</td>
-            <td>${room.currentHeadCount}/${room.maxHeadCount}</td>
             <td>${room.roomName}</td>
+            <td>${room.currentHeadCount}/${room.maxHeadCount}</td>
+            <td>${roomAdmin}</td>
             <td>
                 <a href="#" class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true"><i class="fa fa-close"></i></span>
