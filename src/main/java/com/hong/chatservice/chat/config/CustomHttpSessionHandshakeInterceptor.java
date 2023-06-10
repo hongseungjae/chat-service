@@ -16,11 +16,6 @@ public class CustomHttpSessionHandshakeInterceptor implements HandshakeIntercept
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
                                    Map<String, Object> attributes) throws Exception {
 
-
-        /*HttpSession httpSession = getSession(request);
-        if (httpSession == null || httpSession.getAttribute(SessionConst.LOGIN_MEMBER) == null) {
-            throw new NotAuthorizedException();
-        }*/
         return true;
     }
 
