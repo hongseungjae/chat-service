@@ -10,7 +10,7 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    static final public int EXPIRATION_TIME = 60000 * 1000;
+    static final public int EXPIRATION_TIME = 60000 * 1000; // 60초 * 10 = 10분
     static final public String SECRET_KEY = "secret";
     static final public String TOKEN_PREFIX = "Bearer ";
     static final public String HEADER_STRING = "Authorization";
