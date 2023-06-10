@@ -39,30 +39,21 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         String header = request.getHeader(JwtUtil.HEADER_STRING);
 
-        String username = null;
-        try {
-            username = jwtUtil.validateToken(header);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            chain.doFilter(request, response);
-            return;
-        }
+        String username = jwtUtil.validateToken(header);
 
-        if (username != null) {
-            Member member = memberRepository.findByMemberName(username)
-                    .orElseThrow(() -> {
-                        throw new UsernameNotFoundException("UsernameNotFoundException");
-                    });
+        Member member = memberRepository.findByMemberName(username)
+                .orElseThrow(() -> {
+                    throw new UsernameNotFoundException("UsernameNotFoundException");
+                });
 
-            Collection<GrantedAuthority> authorities = new ArrayList<>();
-            member.getRoleList().forEach(role ->
-                    authorities.add(()-> role));
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        member.getRoleList().forEach(role ->
+                authorities.add(() -> role));
 
-            MemberContext principalDetails = new MemberContext(member, authorities);
+        MemberContext principalDetails = new MemberContext(member, authorities);
 
-            Authentication authenticate = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authenticate);
-        }
+        Authentication authenticate = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
 
         chain.doFilter(request, response);
     }
