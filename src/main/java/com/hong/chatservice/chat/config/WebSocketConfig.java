@@ -1,5 +1,6 @@
 package com.hong.chatservice.chat.config;
 
+import com.hong.chatservice.member.application.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +14,9 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-    //private final StompHandler stompHandler;
+
+    private final JwtUtil jwtUtil;
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableSimpleBroker("/topic/chat");
@@ -30,7 +33,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        //registration.interceptors(stompHandler);
+        registration.interceptors(jwtChannelInterceptor());
+    }
+
+    @Bean
+    public JwtChannelInterceptor jwtChannelInterceptor(){
+        return new JwtChannelInterceptor(jwtUtil);
     }
 
     @Bean
