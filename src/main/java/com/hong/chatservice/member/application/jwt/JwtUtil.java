@@ -1,21 +1,19 @@
 package com.hong.chatservice.member.application.jwt;
 
-import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
 
-    static final int EXPIRATION_TIME = 60000 * 10;
-    static final String SECRET_KEY = "secret";
-    static final String TOKEN_PREFIX = "Bearer ";
-    static final String HEADER_STRING = "Authorization";
+    static final public int EXPIRATION_TIME = 60000 * 1000;
+    static final public String SECRET_KEY = "secret";
+    static final public String TOKEN_PREFIX = "Bearer ";
+    static final public String HEADER_STRING = "Authorization";
     
     public String createJwt(Long memberId, String memberName){
         String jwtToken = Jwts.builder()
@@ -29,7 +27,7 @@ public class JwtUtil {
         return TOKEN_PREFIX+jwtToken;
     }
 
-    public String validateToken(String authorizationHeader) throws IllegalAccessException {
+    public String validateToken(String authorizationHeader) {
         validationAuthorizationHeader(authorizationHeader);
         String token = extractToken(authorizationHeader);
 
@@ -42,16 +40,20 @@ public class JwtUtil {
                     .get("username").toString();
         } catch (JwtException e) {
             e.printStackTrace();
-            throw new IllegalAccessException();
+            throw new RuntimeException("Jwt 검증에 실패했습니다.");
+        }
+
+        if (username == null) {
+            throw new RuntimeException("Jwt 토큰에서 username을 얻어오는데 실패했습니다.");
         }
 
         return username;
 
     }
 
-    private void validationAuthorizationHeader(String header) throws IllegalAccessException {
+    private void validationAuthorizationHeader(String header) {
         if (header == null || !header.startsWith(TOKEN_PREFIX)) {
-            throw new IllegalAccessException();
+            throw new RuntimeException("헤더값이 Bearer 타입이 아니거나 null 입니다.");
         }
     }
 
