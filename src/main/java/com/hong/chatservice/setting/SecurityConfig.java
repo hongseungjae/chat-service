@@ -69,10 +69,10 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
+    /*@Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers("/websocket/**");  // "/static/**" 으로 들어오는 요청 무시
-    }
+    }*/
 
 
     @Bean

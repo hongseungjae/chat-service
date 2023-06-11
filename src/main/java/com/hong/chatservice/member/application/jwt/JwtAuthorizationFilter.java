@@ -39,7 +39,13 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         String header = request.getHeader(JwtUtil.HEADER_STRING);
 
-        String username = jwtUtil.validateToken(header);
+        String username="";
+        try {
+            username = jwtUtil.validateToken(header);
+        } catch (RuntimeException e) {
+            chain.doFilter(request, response);
+            return;
+        }
 
         Member member = memberRepository.findByMemberName(username)
                 .orElseThrow(() -> {

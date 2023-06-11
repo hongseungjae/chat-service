@@ -3,7 +3,7 @@ fetch(`http://${API_IP}:${API_PORT}/rooms`, {
     //credentials: 'include',
     headers: {
         'Content-Type': 'application/json',
-         'Authorization' : localStorage.getItem("access_token")
+         //'Authorization' : localStorage.getItem("access_token")
     },
 })
     .then(response => {
