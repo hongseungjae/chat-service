@@ -12,7 +12,7 @@ stompClient = Stomp.over(socket);
 stompClient.connect(headers, (frame) => {
     console.log('Connected: ' + frame);
     
-    stompClient.subscribe(`/topic/chat/${roomId}`, function (receivedMesssage) {
+    stompClient.subscribe(`/topic/${roomId}`, function (receivedMesssage) {
         var message= JSON.parse(receivedMesssage.body);
         //console.log(receivedMesssage.body + "  서버에서 날아온 메시지 ");
 

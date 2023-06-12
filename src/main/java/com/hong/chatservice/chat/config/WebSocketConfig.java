@@ -19,8 +19,16 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic/chat");
-        config.setApplicationDestinationPrefixes("/app");
+        //config.enableSimpleBroker("/topic/chat");
+        //config.setApplicationDestinationPrefixes("/app");
+
+        config.setApplicationDestinationPrefixes("/app")
+                .enableStompBrokerRelay("/topic")
+                .setRelayHost("localhost")
+                .setRelayPort(61613)
+                .setClientLogin("guest")
+                .setClientPasscode("guest");
+
     }
 
     @Override

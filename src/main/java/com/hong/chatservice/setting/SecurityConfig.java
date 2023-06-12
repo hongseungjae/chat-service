@@ -71,7 +71,7 @@ public class SecurityConfig {
 
     /*@Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/websocket/**");  // "/static/**" 으로 들어오는 요청 무시
+        return (web) -> web.ignoring().requestMatchers("/**");  // "/static/**" 으로 들어오는 요청 무시
     }*/
 
 

@@ -29,6 +29,7 @@ public class EnterRoomEvent {
 
         String destination = accessor.getFirstNativeHeader(StompHeaderAccessor.STOMP_DESTINATION_HEADER);
         ServerMessage serverMessage = new ServerMessage(SERVER_NAME, String.format("%s님이 입장하였습니다.", username));
+        log.info("server 입장 : {}",serverMessage);
 
         template.convertAndSend(destination, serverMessage);
     }

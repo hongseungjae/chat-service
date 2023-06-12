@@ -28,8 +28,9 @@ public class ChatController {
         String username = jwtUtil.validateToken(token);
         chatMessage.setMemberName(username);
 
-        template.convertAndSend("/topic/chat/" + chatMessage.getRoomId(), chatMessage);
-        //chatService.createChat(chatMessage);
         log.info("chatMessage = {}", chatMessage);
+        template.convertAndSend("/topic/" + chatMessage.getRoomId(), chatMessage);
+        //chatService.createChat(chatMessage);
+
     }
 }
