@@ -25,10 +25,9 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
 
-        log.info("command = {}",accessor.getCommand());
-        log.info("token = {}",accessor.getNativeHeader(JwtUtil.HEADER_STRING));
-
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+            log.info("command = {}",accessor.getCommand());
+            log.info("token = {}",accessor.getNativeHeader(JwtUtil.HEADER_STRING));
             String token = accessor.getFirstNativeHeader(JwtUtil.HEADER_STRING);
             jwtUtil.validateToken(token);
         }
