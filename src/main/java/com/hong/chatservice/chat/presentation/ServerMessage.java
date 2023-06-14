@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 public class ServerMessage {
 
-    private String serverName;
+    private String memberName;
     @NotEmpty
     @Size(min = 1, max = 300)
     private String content;
