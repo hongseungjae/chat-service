@@ -35,6 +35,7 @@ Member - Participant - Room 과 같은 관계로 풀어낼 수 있습니다.
 
 ### RoomService 테스트 코드 작성 시 스프링테스트 없이 만들어보기
 * 테스트
+* repository 모킹킹
 
 ### No default constructor for entity 에러
 * 엔티티에 기본 생성자가 없다는 에러이다.
@@ -61,7 +62,8 @@ hibernate가 엔티티를 만들 때 기본 생성자를 이용하기 때문에 
 ### No serializer found for class com.hong.chatservice.room.application.ParticipantInfo and no properties discovered to create BeanSerializer (to avoid exception, disable SerializationFeature.FAIL_ON_EMPTY_BEANS) 에러
 * dto로 클라이언트로 반환하는 중에 getter가 열려있지 않아서 발생하는 에러
 
-### 동시성 이슈 확인해보기 public void checkEnoughHeadCount() { if ((participants.size() + 1) >= maxHeadCount) { throw new RuntimeException(); } }
+### 동시성 이슈 확인해보기
+* public void checkEnoughHeadCount() { if ((participants.size() + 1) >= maxHeadCount) { throw new RuntimeException(); } }
 
 ### stomp disconnect 발생 시
 
