@@ -1,5 +1,29 @@
 # Chat service
-스프링부트 웹소켓을 이용한 채팅서비스
+스프링부트 웹소켓 Stomp를 이용한 채팅서비스
+
+## 주요 참조 문서
+
+stomp 프로토콜
+> https://stomp.github.io/stomp-specification-1.2.html
+
+스프링 stomp
+> https://docs.spring.io/spring-framework/reference/web/websocket/stomp.html
+> https://docs.spring.io/spring-framework/docs/4.3.x/spring-framework-reference/html/websocket.html
+
+rabbitmq stomp
+> https://www.rabbitmq.com/stomp.html
+
+## 구성
+### 프론트
+* HTML
+* JavaScript
+* css
+
+### 백엔드
+* SpringBoot
+* mysql
+* JPA
+* RabbitMq
 
 ## 경험
 ### N:M 관계에서 1:N, M:1 관계로 풀기
