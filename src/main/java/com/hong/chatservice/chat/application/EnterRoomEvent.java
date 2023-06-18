@@ -31,6 +31,11 @@ public class EnterRoomEvent {
         accessor.getSessionAttributes().put(EventProperties.SESSION_USERNAME, username);
         accessor.getSessionAttributes().put(EventProperties.SESSION_DESTINATION, destination);
 
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         template.convertAndSend(destination, serverMessage);
     }
 }
