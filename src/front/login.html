@@ -76,10 +76,9 @@
         })
             .then(response => {
                 if (!response.ok) {
-                    console.log(response);
                     response.json().then(error => {
-                        alert(error);
                         console.log(error);
+                        alert(error.message);
                     });
                 } else {
                     var token = response.headers.get('Authorization');
