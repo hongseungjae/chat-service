@@ -3,6 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+              .container {
+            display: flex;
+        }
+
+        .chatbox,
+        .userlist {
+            flex: 1;
+            margin-right: 10px;
+        }
+    </style>
 <script>
     
 
@@ -25,9 +36,12 @@
 
     <div class="p-4" style="padding: 0rem!important;">
         <h4 class="fst-italic">채팅방</h4>
-        <div class="chatbox" id="chatbox">
-
-        </div>
+        
+        <div class="container">
+          <div class="chatbox" id="chatbox"></div>
+          <div class="userlist" id="userlist"></div>
+      </div>
+      
         <div class="inputbox">
           <form onsubmit="return false;">
             <input type="text" id="messageContent" placeholder="메시지를 입력하세요...">
@@ -35,6 +49,7 @@
             <p></p>
           </form>
         </div>
+
       </div>
 
 </body>

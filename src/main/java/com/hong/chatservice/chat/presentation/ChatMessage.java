@@ -21,6 +21,8 @@ public class ChatMessage {
     @Size(min = 1, max = 300)
     private String content;
 
+    private MessageType messageType;
+
     public void setMemberName(String memberName) {
         this.memberName = memberName;
     }

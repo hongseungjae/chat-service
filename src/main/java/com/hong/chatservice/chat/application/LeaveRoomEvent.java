@@ -1,5 +1,6 @@
 package com.hong.chatservice.chat.application;
 
+import com.hong.chatservice.chat.presentation.MessageType;
 import com.hong.chatservice.chat.presentation.ServerMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,7 @@ public class LeaveRoomEvent {
         String username = (String) accessor.getSessionAttributes().get(EventProperties.SESSION_USERNAME);
         String destination = (String) accessor.getSessionAttributes().get(EventProperties.SESSION_DESTINATION);
 
-        ServerMessage serverMessage = new ServerMessage(EventProperties.SERVER_NAME, String.format("%s님이 나갔습니다.", username));
+        ServerMessage serverMessage = new ServerMessage(EventProperties.SERVER_NAME, username, String.format("%s님이 나갔습니다.", username), MessageType.LEAVE);
         log.info("server 퇴장 : {}",serverMessage);
 
         template.convertAndSend(destination, serverMessage);

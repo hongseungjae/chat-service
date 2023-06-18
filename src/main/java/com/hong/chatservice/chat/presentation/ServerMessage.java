@@ -14,7 +14,9 @@ import lombok.ToString;
 public class ServerMessage {
 
     private String memberName;
+    private String userName;
     @NotEmpty
     @Size(min = 1, max = 300)
     private String content;
+    private MessageType messageType;
 }

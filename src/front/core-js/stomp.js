@@ -46,6 +46,25 @@ stompClient.connect(headers, (frame) => {
         input.value = '';
         container.scrollTop = container.scrollHeight;
 
+        if(message.messageType === 'JOIN') {
+          const userListElement = document.getElementById('userlist');
+          //userListElement.innerHTML = '';
+  
+          const userElement = document.createElement('div');
+          userElement.setAttribute('id', message.userName);
+          userElement.classList.add('userlist-item');
+          userElement.innerText = message.userName;
+          userListElement.appendChild(userElement);
+        } else if(message.messageType === 'LEAVE') {
+
+          const userListElement = document.getElementById('userlist');
+          const user = userListElement.querySelector(`#${message.userName}`);
+          user.remove();
+
+        }
+
+
+
     }, {Authorization: localStorage.getItem('access_token')})
   }, (error) => {
       console.log('연결실패');
