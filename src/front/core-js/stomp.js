@@ -38,7 +38,7 @@ stompClient.connect(headers, (frame) => {
 
         div.className = 'message';
         div.innerHTML = `
-          <span class="name">${message.memberName} :</span>
+          <span class="name">${message.sourceName} :</span>
           <span class="text">${message.content}</span>
           <span class="time">${formattedTime}</span>
           `;
@@ -48,17 +48,20 @@ stompClient.connect(headers, (frame) => {
 
         if(message.messageType === 'JOIN') {
           const userListElement = document.getElementById('userlist');
-          //userListElement.innerHTML = '';
+          userListElement.innerHTML = '';
+
+          message.userNames.forEach(userName => {
+            const userElement = document.createElement('div');
+            userElement.setAttribute('id', userName);
+            userElement.classList.add('userlist-item');
+            userElement.innerText = userName;
+            userListElement.appendChild(userElement);
+        });
   
-          const userElement = document.createElement('div');
-          userElement.setAttribute('id', message.userName);
-          userElement.classList.add('userlist-item');
-          userElement.innerText = message.userName;
-          userListElement.appendChild(userElement);
         } else if(message.messageType === 'LEAVE') {
 
           const userListElement = document.getElementById('userlist');
-          const user = userListElement.querySelector(`#${message.userName}`);
+          const user = userListElement.querySelector(`#${message.leavedUserName}`);
           user.remove();
 
         }

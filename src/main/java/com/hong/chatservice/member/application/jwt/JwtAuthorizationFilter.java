@@ -7,6 +7,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 
+@Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private final MemberRepository memberRepository;
@@ -43,6 +45,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         try {
             username = jwtUtil.validateToken(header);
         } catch (RuntimeException e) {
+            log.error(e.getMessage());
             chain.doFilter(request, response);
             return;
         }
