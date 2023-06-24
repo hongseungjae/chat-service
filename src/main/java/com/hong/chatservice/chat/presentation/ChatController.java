@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +26,7 @@ public class ChatController {
 
         String token = accessor.getFirstNativeHeader(JwtUtil.HEADER_STRING);
         String username = jwtUtil.validateToken(token);
-        chatMessage.setMemberName(username);
+        chatMessage.setSourceName(username);
 
         log.info("chatMessage = {}", chatMessage);
         template.convertAndSend("/topic/" + chatMessage.getRoomId(), chatMessage);

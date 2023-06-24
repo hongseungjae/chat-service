@@ -44,12 +44,14 @@ public class JoinRoomEvent {
         ((DefaultSimpUserRegistry) simpUserRegistry).onApplicationEvent(new SessionConnectedEvent(this, event.getMessage(), userPrincipal));
         ((DefaultSimpUserRegistry) simpUserRegistry).onApplicationEvent(new SessionSubscribeEvent(this, event.getMessage(), userPrincipal));
 
+
+        Set<SimpSubscription> subscriptions = simpUserRegistry.findSubscriptions(subscription ->
+                subscription.getDestination().equals(destination));
+
         ArrayList<String> userNames = new ArrayList();
-        Set<SimpSubscription> subscriptions = simpUserRegistry.findSubscriptions(subscription -> subscription.getDestination().equals(destination));
         for (SimpSubscription subscription : subscriptions) {
             userNames.add(subscription.getSession().getUser().getName());
         }
-
 
         ServerMessage serverMessage = JoinServerMessage.builder()
                 .sourceName(EventProperties.SERVER_NAME)

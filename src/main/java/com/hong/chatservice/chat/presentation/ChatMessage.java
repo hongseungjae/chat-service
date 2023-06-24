@@ -16,14 +16,14 @@ public class ChatMessage {
 
     @NotNull
     private Long roomId;
-    private String memberName;
+    private String sourceName;
     @NotEmpty
     @Size(min = 1, max = 300)
     private String content;
 
     private MessageType messageType;
 
-    public void setMemberName(String memberName) {
-        this.memberName = memberName;
+    public void setSourceName(String sourceName) {
+        this.sourceName = sourceName;
     }
 }

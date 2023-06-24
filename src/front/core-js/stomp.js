@@ -80,7 +80,6 @@ function sendMessage() {
   const writer = document.getElementById('messageWriter');
   const ChatRequest = {
   roomId: roomId,
-  memberName: '',
   content: content.value,
   };
 
