@@ -5,7 +5,7 @@ console.log('roomId : '+ roomId);
 var stompClient = null;
 var headers = {Authorization: localStorage.getItem('access_token')};
 
-var socket = new SockJS(`http://localhost:8080/websocket`);
+var socket = new SockJS(`http://${API_IP}:${API_PORT}/websocket`);
 
 stompClient = Stomp.over(socket);
 

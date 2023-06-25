@@ -1,3 +1,6 @@
+server:
+  port: ${port:8080}
+
   spring:
   datasource:
     url: jdbc:h2:tcp://localhost/~/quick-together-test
