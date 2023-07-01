@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.simp.user.*;
@@ -40,10 +42,25 @@ public class JoinRoomEvent {
         String username = jwtUtil.validateToken(token);
         String destination = accessor.getFirstNativeHeader(StompHeaderAccessor.STOMP_DESTINATION_HEADER);
 
-        UserPrincipal userPrincipal = new UserPrincipal(username);
-        ((DefaultSimpUserRegistry) simpUserRegistry).onApplicationEvent(new SessionConnectedEvent(this, event.getMessage(), userPrincipal));
-        ((DefaultSimpUserRegistry) simpUserRegistry).onApplicationEvent(new SessionSubscribeEvent(this, event.getMessage(), userPrincipal));
 
+        UserPrincipal userPrincipal = new UserPrincipal(username);
+        accessor.setUser(userPrincipal);
+        ((MultiServerUserRegistry) simpUserRegistry).onApplicationEvent(new SessionConnectedEvent(this, event.getMessage(), userPrincipal));
+        ((MultiServerUserRegistry) simpUserRegistry).onApplicationEvent(new SessionSubscribeEvent(this, event.getMessage(), userPrincipal));
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        DefaultUserDestinationResolver defaultUserDestinationResolver = new DefaultUserDestinationResolver(simpUserRegistry);
+        defaultUserDestinationResolver.setUserDestinationPrefix("/topic");
+        UserDestinationResult userDestinationResult = defaultUserDestinationResolver.resolveDestination(event.getMessage());
+        System.out.println("userDestinationResult.toString() = " + userDestinationResult.toString());
+
+
+        int userCount = simpUserRegistry.getUserCount();
+        System.out.println("join userCount = " + userCount);
 
         Set<SimpSubscription> subscriptions = simpUserRegistry.findSubscriptions(subscription ->
                 subscription.getDestination().equals(destination));

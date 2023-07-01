@@ -4,13 +4,11 @@ import com.hong.chatservice.member.application.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
-import org.springframework.web.socket.messaging.DefaultSimpUserRegistry;
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -28,10 +26,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
         config.setApplicationDestinationPrefixes("/app")
                 .enableStompBrokerRelay("/topic")
+                .setUserDestinationBroadcast("/topic/unresolved-user")
+                .setUserRegistryBroadcast("/topic/user-registry")
                 .setRelayHost("localhost")
                 .setRelayPort(61613)
                 .setClientLogin("guest")
                 .setClientPasscode("guest");
+
+        //config.setUserRegistryOrder(Ordered.HIGHEST_PRECEDENCE + 3);
 
     }
 
