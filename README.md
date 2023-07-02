@@ -31,6 +31,16 @@ rabbitmq stomp
 
 ## 주요 이슈
 #### 
+* 스프링부트 websocket을 분산환경에서 사용하기위해 메시지큐를 도입
+  - 스프링 컨테이너 메모리에 존재하는 브로커채널을 분산환경에서는 사용불가
+  - RabbitMQ를 도입하여 해당 문제를 해결
+  - https://hong-good.tistory.com/9
+ 
+* 스프링부트 웹소켓 stomp 환경에서 이벤트 활용하기
+  - 채팅방에 입장 시 입장 메시지와 퇴장 시 퇴장 메시지를 뿌리기 위해 스프링 이벤트를 활용하여 처리
+  - https://hong-good.tistory.com/7
+ 
+
 * Spring Security 403 response 해결
   - 알 수 없는 이유로 권한 에러가 발생
   - 로그 레벨을 높이고, 디버깅을 통한 문제 해결
@@ -40,15 +50,6 @@ rabbitmq stomp
   - 인증 실패 시 401 응답이 발생
   - 디버깅을 하여 커스텀 포인트를 발견하고 해당 에러를 잡기위한 커스텀 클래스를 작성하여 처리
   - https://hong-good.tistory.com/6
-
-* 스프링부트 웹소켓 stomp 환경에서 이벤트 활용하기
-  - 채팅방에 입장 시 입장 메시지와 퇴장 시 퇴장 메시지를 뿌리기 위해 스프링 이벤트를 활용하여 처리
-  - https://hong-good.tistory.com/7
-
-* 스프링부트 websocket을 분산환경에서 사용하기위해 메시지큐를 도입
-  - 스프링 컨테이너 메모리에 존재하는 브로커채널을 분산환경에서는 사용불가
-  - RabbitMQ를 도입하여 해당 문제를 해결
-  - https://hong-good.tistory.com/9
 
 ## 경험
 <details>
