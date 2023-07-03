@@ -1,0 +1,4 @@
+src/front/css/* linguist-documentation
+*.scss linguist-vendored
+src/front/scss/* linguist-documentation
+
