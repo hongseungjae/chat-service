@@ -92,7 +92,7 @@ Member - Participant - Room 과 같은 관계로 풀어낼 수 있습니다.
     <summary>cascade = CascadeType.ALL와 orphanRemoval = true </summary>
 
 * CascadeType.REMOVE와 orphanRemoval = true는 부모 엔티티를 삭제하면 자식 엔티티도 삭제한다.
-* 그러나 삭제 시에는 CascadeType.REMOVE는 자식 엔티티가 그대로 남아있는 반면, orphanRemoval = true는 자식 엔티티를 제거한다.
+* 부모 엔티티에서 자식 엔티티를 삭제 시에는 CascadeType.REMOVE는 자식 엔티티가 그대로 남아있는 반면, orphanRemoval = true는 자식 엔티티를 제거한다.
 * https://tecoble.techcourse.co.kr/post/2021-08-15-jpa-cascadetype-remove-vs-orphanremoval-true/
 
 </details>
