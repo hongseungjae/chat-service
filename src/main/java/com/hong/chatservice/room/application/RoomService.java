@@ -77,6 +77,22 @@ public class RoomService {
         finedRoom.addParticipant(member);
     }
 
+    @Transactional
+    public void joinRoom(Long roomId, String memberName){
+        Room finedRoom = findRoom(roomId);
+        Member member = memberRepository.findByMemberName(memberName)
+                .orElseThrow(RuntimeException::new);
+        finedRoom.addParticipant(member);
+    }
+
+    @Transactional
+    public void leaveRoom(Long roomId, String memberName){
+        Room finedRoom = findRoom(roomId);
+        Member member = memberRepository.findByMemberName(memberName)
+                .orElseThrow(RuntimeException::new);
+        finedRoom.removeParticipant(member.getId());
+    }
+
     private Room findRoom(Long roomId) {
         return roomRepository.findById(roomId)
                 .orElseThrow(RuntimeException::new);

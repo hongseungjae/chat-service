@@ -3,6 +3,8 @@ package com.hong.chatservice.chat.application;
 import com.hong.chatservice.chat.presentation.MessageType;
 import com.hong.chatservice.chat.presentation.ServerMessage;
 import com.hong.chatservice.member.application.jwt.JwtUtil;
+import com.hong.chatservice.room.application.RoomResponseDto;
+import com.hong.chatservice.room.application.RoomService;
 import com.sun.security.auth.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,10 +31,7 @@ public class JoinRoomEvent {
 
     private final SimpMessageSendingOperations template;
     private final JwtUtil jwtUtil;
-
-    @Autowired
-    private SimpUserRegistry simpUserRegistry;
-
+    private final RoomService roomService;
 
     @EventListener
     public void handleSubscribeEvent(SessionSubscribeEvent event) {
@@ -42,39 +41,19 @@ public class JoinRoomEvent {
         String username = jwtUtil.validateToken(token);
         String destination = accessor.getFirstNativeHeader(StompHeaderAccessor.STOMP_DESTINATION_HEADER);
 
+        Long roomId = Long.valueOf(destination.split("/")[1]);
+        roomService.joinRoom(roomId, username);
 
-        UserPrincipal userPrincipal = new UserPrincipal(username);
-        accessor.setUser(userPrincipal);
-        ((MultiServerUserRegistry) simpUserRegistry).onApplicationEvent(new SessionConnectedEvent(this, event.getMessage(), userPrincipal));
-        ((MultiServerUserRegistry) simpUserRegistry).onApplicationEvent(new SessionSubscribeEvent(this, event.getMessage(), userPrincipal));
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        DefaultUserDestinationResolver defaultUserDestinationResolver = new DefaultUserDestinationResolver(simpUserRegistry);
-        defaultUserDestinationResolver.setUserDestinationPrefix("/topic");
-        UserDestinationResult userDestinationResult = defaultUserDestinationResolver.resolveDestination(event.getMessage());
-        System.out.println("userDestinationResult.toString() = " + userDestinationResult.toString());
-
-
-        int userCount = simpUserRegistry.getUserCount();
-        System.out.println("join userCount = " + userCount);
-
-        Set<SimpSubscription> subscriptions = simpUserRegistry.findSubscriptions(subscription ->
-                subscription.getDestination().equals(destination));
-
-        ArrayList<String> userNames = new ArrayList();
-        for (SimpSubscription subscription : subscriptions) {
-            userNames.add(subscription.getSession().getUser().getName());
-        }
+        ArrayList<String> memberNames = new ArrayList();
+        RoomResponseDto roomResponseDto = roomService.retrieveRoom(roomId);
+        roomResponseDto.getParticipantsInfo().stream()
+                .forEach(p -> memberNames.add(p.getMemberName()));
 
         ServerMessage serverMessage = JoinServerMessage.builder()
                 .sourceName(EventProperties.SERVER_NAME)
                 .content(String.format("%s님이 입장하였습니다.", username))
                 .messageType(MessageType.JOIN)
-                .userNames(userNames)
+                .memberNames(memberNames)
                 .build();
 
         log.info("server 입장 : {}", serverMessage);
@@ -82,7 +61,7 @@ public class JoinRoomEvent {
         accessor.getSessionAttributes().put(EventProperties.SESSION_DESTINATION, destination);
 
         try {
-            Thread.sleep(100);
+            Thread.sleep(50);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

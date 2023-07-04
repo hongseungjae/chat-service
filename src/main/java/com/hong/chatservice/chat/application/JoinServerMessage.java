@@ -13,11 +13,11 @@ import java.util.ArrayList;
 @Getter
 @ToString
 public class JoinServerMessage extends ServerMessage {
-    private ArrayList<String> userNames = new ArrayList<>();
+    private ArrayList<String> memberNames = new ArrayList<>();
 
     @Builder
-    public JoinServerMessage(String sourceName, @NotEmpty @Size(min = 1, max = 300) String content, MessageType messageType, ArrayList<String> userNames) {
+    public JoinServerMessage(String sourceName, @NotEmpty @Size(min = 1, max = 300) String content, MessageType messageType, ArrayList<String> memberNames) {
         super(sourceName, content, messageType);
-        this.userNames = userNames;
+        this.memberNames = memberNames;
     }
 }
