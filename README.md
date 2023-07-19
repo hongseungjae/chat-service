@@ -154,6 +154,6 @@ hibernate가 엔티티를 만들 때 기본 생성자를 이용하기 때문에 
     <summary>동시성 이슈 확인해보기</summary>
 
 * public void checkEnoughHeadCount() { if ((participants.size() + 1) >= maxHeadCount) { throw new RuntimeException(); } }
-
+* 테스트에서 트랜잭션
 </details>
 
